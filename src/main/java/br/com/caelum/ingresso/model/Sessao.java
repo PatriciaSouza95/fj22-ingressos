@@ -1,7 +1,10 @@
 package br.com.caelum.ingresso.model;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,29 +17,42 @@ public class Sessao {
 	@GeneratedValue
 	private Integer id;
 	private LocalTime horario;
-	
-	
+
 	@ManyToOne
 	private Sala sala;
-	
+
 	@ManyToOne
 	private Filme filme;
-	
-	public Sessao(){
-		
+
+	private BigDecimal preco;
+
+	public BigDecimal getPreco() {
+		return preco;
 	}
-	
-	public Sessao(LocalTime horario, Filme filme, Sala sala){
+
+	public void setPreco(BigDecimal preco) {
+		this.preco = preco;
+	}
+
+	public Sessao() {
+
+	}
+
+	public Sessao(LocalTime horario, Filme filme, Sala sala) {
 		this.horario = horario;
 		this.setFilme(filme);
 		this.sala = sala;
+		this.preco = this.sala.getPreco().add(filme.getPreco());
 	}
-	
-	public Sala getSala(){
+	public Map<String, List<Lugar>> getMapadeLugares(){
+		return sala.getMapaDeLugares();
+	}
+
+	public Sala getSala() {
 		return sala;
 	}
-	
-	public void setSala(Sala sala){
+
+	public void setSala(Sala sala) {
 		this.sala = sala;
 	}
 
@@ -63,9 +79,12 @@ public class Sessao {
 	public void setFilme(Filme filme) {
 		this.filme = filme;
 	}
-	
-	public LocalTime getHorarioTermino(){
+
+	public LocalTime getHorarioTermino() {
 		return this.horario.plus(filme.getDuracao().toMinutes(), ChronoUnit.MINUTES);
 	}
-	
+	public Map<String, List<Lugar>> getMapaDeLugares(){
+		return sala.getMapaDeLugares();
+	}
+
 }
